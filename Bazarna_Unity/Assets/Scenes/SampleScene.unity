@@ -5294,7 +5294,7 @@ MonoBehaviour:
   PanAction: {fileID: 3762938203315760040, guid: d30d1580d048b3c4383eb291b46ef4a9, type: 3}
   rotateAction: {fileID: -3955692791071931072, guid: d30d1580d048b3c4383eb291b46ef4a9, type: 3}
   mouseDelta: {fileID: 7705124236071841302, guid: d30d1580d048b3c4383eb291b46ef4a9, type: 3}
-  speedMultiplier: 120
+  speedMultiplier: 10
   panSpeed: 10
   rotateSpeed: 30
   state: 0
