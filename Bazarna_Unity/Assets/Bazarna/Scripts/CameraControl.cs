@@ -78,7 +78,11 @@ public class CameraControl : MonoBehaviour
 		{
 			Vector2 value = mouseDelta.action.ReadValue<Vector2>();
 			Vector3 move = new Vector3(-value.y, value.x, 0) * rotateSpeed * Time.deltaTime;
-			Cam.Rotate(move);
+			Cam.Rotate(Vector3.up,move.y,Space.World);
+			Cam.Rotate(Vector3.right, move.x,Space.World);
+			Vector3 euler = Cam.rotation.eulerAngles;
+			euler.z = 0;
+			Cam.rotation = Quaternion.Euler(euler);
 		}
 	}
 	private void OnCameraMoveInOut(InputAction.CallbackContext context)
