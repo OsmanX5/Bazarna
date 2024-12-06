@@ -1,9 +1,9 @@
 const cacheName = "DefaultCompany-Bazarna-0.1.0";
 const contentToCache = [
     "Build/FinalDemo.loader.js",
-    "Build/FinalDemo.framework.js.gz",
-    "Build/FinalDemo.data.gz",
-    "Build/FinalDemo.wasm.gz",
+    "Build/FinalDemo.framework.js",
+    "Build/FinalDemo.data",
+    "Build/FinalDemo.wasm",
     "TemplateData/style.css"
 
 ];
