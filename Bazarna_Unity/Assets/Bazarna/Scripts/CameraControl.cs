@@ -71,7 +71,7 @@ public class CameraControl : MonoBehaviour
 		if(state == State.Panning)
 		{
 			Vector2 value = mouseDelta.action.ReadValue<Vector2>();
-			Vector3 move = new Vector3(value.x, value.y,0) * panSpeed * Time.deltaTime;
+			Vector3 move = new Vector3(-value.x, -value.y,0) * panSpeed * Time.deltaTime;
 			Cam.Translate(move);
 		}
 		else if (state == State.Rotating)
@@ -85,7 +85,7 @@ public class CameraControl : MonoBehaviour
 	{
 		Vector2 value = context.ReadValue<Vector2>();
 		float moveVal = value.y;
-		Cam.Translate(Vector3.forward * moveVal * speedMultiplier);
+		Cam.Translate(Vector3.forward * moveVal * speedMultiplier * Time.deltaTime);
 	}
 
 	enum State
