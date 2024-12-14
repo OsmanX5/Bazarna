@@ -84,12 +84,13 @@ public class CameraControl : MonoBehaviour
 			euler.z = 0;
 			Cam.rotation = Quaternion.Euler(euler);
 		}
+		Vector2 moveInOut = cameraMoveInOut.action.ReadValue<Vector2>();
+		float moveVal = moveInOut.y;
+		Cam.Translate(Vector3.forward * moveVal * speedMultiplier * Time.deltaTime);
 	}
 	private void OnCameraMoveInOut(InputAction.CallbackContext context)
 	{
-		Vector2 value = context.ReadValue<Vector2>();
-		float moveVal = value.y;
-		Cam.Translate(Vector3.forward * moveVal * speedMultiplier * Time.deltaTime);
+		
 	}
 
 	enum State
