@@ -1,4 +1,7 @@
+
+using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -30,6 +33,11 @@ public class CameraControl : MonoBehaviour
 
 	[SerializeField]
 	State state = State.None;
+	GameObject canvas;
+	private void Awake()
+	{
+		canvas = GameObject.Find("ProductCanvas");
+	}
 	private void OnEnable()
 	{
 		Debug.Log("CameraControl.OnEnable");
@@ -68,7 +76,11 @@ public class CameraControl : MonoBehaviour
 	}
 	private void Update()
 	{
-		if(state == State.Panning)
+		if (canvas.activeSelf)
+		{
+			return;
+		}
+		if (state == State.Panning)
 		{
 			Vector2 value = mouseDelta.action.ReadValue<Vector2>();
 			Vector3 move = new Vector3(-value.x, -value.y,0) * panSpeed * Time.deltaTime;
@@ -78,16 +90,58 @@ public class CameraControl : MonoBehaviour
 		{
 			Vector2 value = mouseDelta.action.ReadValue<Vector2>();
 			Vector3 move = new Vector3(-value.y, value.x, 0) * rotateSpeed * Time.deltaTime;
-			Cam.Rotate(Vector3.up,move.y,Space.World);
-			Cam.Rotate(Vector3.right, move.x,Space.World);
+			Cam.Rotate(Vector3.up,move.y,Space.Self);
+			Cam.Rotate(Vector3.right, move.x,Space.Self);
 			Vector3 euler = Cam.rotation.eulerAngles;
 			euler.z = 0;
 			Cam.rotation = Quaternion.Euler(euler);
 		}
 		Vector2 moveInOut = cameraMoveInOut.action.ReadValue<Vector2>();
 		float moveVal = moveInOut.y;
-		Cam.Translate(Vector3.forward * moveVal * speedMultiplier * Time.deltaTime);
+		Vector3 forward= Cam.forward;
+		forward.y = 0;
+		if (moveVal > 0 && IsTherColliderInfront())
+		{
+			Debug.Log("we will not move ther collider in front");
+			return;
+		}
+		if(moveVal < 0 && IsThereColliderInBack())
+		{
+			Debug.Log("we will not move ther collider in back");
+			return;
+		}
+		Cam.Translate(forward * moveVal * speedMultiplier * Time.deltaTime,Space.World);
 	}
+	[SerializeField]
+	List<string> collided = new();
+
+	bool IsTherColliderInfront()
+	{
+		Vector3 forward = Cam.forward;
+		forward.y = 0;
+		Ray ray = new Ray(Cam.position, forward);
+		Physics.Raycast(ray, out RaycastHit hitInfo,1f);
+		if(hitInfo.collider == null)
+			return false;
+		string collidedName= hitInfo.collider.name;
+		if(!collided.Contains(collidedName))
+			collided.Add(collidedName);
+		return true;
+	}
+	bool IsThereColliderInBack()
+	{
+		Vector3 forward =- Cam.forward;
+		forward.y = 0;
+		Ray ray = new Ray(Cam.position, forward);
+		Physics.Raycast(ray, out RaycastHit hitInfo, 1f);
+		if (hitInfo.collider == null)
+			return false;
+		string collidedName = hitInfo.collider.name;
+		if (!collided.Contains(collidedName))
+			collided.Add(collidedName);
+		return true;
+	}
+	
 	private void OnCameraMoveInOut(InputAction.CallbackContext context)
 	{
 		
